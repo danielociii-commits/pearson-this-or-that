@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>This or That — Pearson BPM/PFS Finance Edition</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f0fb;min-height:100vh}
+:root{
+  --pp:#3d0099;--ppd:#2a006b;--ppl:#ede8f7;
+  --pg:#d4a017;--po:#e8701a;--pt:#007c6e;
+  --td:#1a1a2e;--tm:#4a4a6a;--tl:#8888aa;
+  --cb:#ffffff;--pb:#f4f0fb;--br:#d4c8ec;
+  --sh:0 2px 12px rgba(61,0,153,0.10)
+}
+.page{min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--ppd);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;flex-shrink:0;border-bottom:3px solid var(--pg)}
+.header-left{display:flex;align-items:center;gap:12px}
+.plogo{width:32px;height:32px;border-radius:6px;background:var(--po);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px}
+.htitle{color:white;font-size:14px;font-weight:600}
+.hsub{color:rgba(255,255,255,0.6);font-size:12px}
+.hdots{display:flex;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%}
+.hero{background:linear-gradient(135deg,var(--ppd) 0%,var(--pp) 50%,#7b2fbe 100%);padding:48px 24px 40px;text-align:center;color:white}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px}
+.hero-title{font-size:42px;font-weight:800;line-height:1.1;margin-bottom:8px}
+.hero-title span{color:var(--pg)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.75);margin-bottom:24px}
+.cbars{display:flex;justify-content:center;gap:4px}
+.cbar{width:18px;height:48px;border-radius:3px}
+.main{flex:1;padding:32px 24px;max-width:680px;margin:0 auto;width:100%}
+.card{background:var(--cb);border-radius:16px;box-shadow:var(--sh);border:1px solid var(--br);padding:28px 24px;margin-bottom:16px}
+.cc{text-align:center}
+.ci{font-size:40px;margin-bottom:12px}
+.ct{font-size:20px;font-weight:700;color:var(--td);margin-bottom:6px}
+.cs{font-size:14px;color:var(--tm);margin-bottom:20px}
+.btn{display:block;width:100%;padding:14px 20px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;text-align:center;margin-bottom:10px}
+.btn:last-child{margin-bottom:0}
+.bp{background:var(--pp);color:white}
+.bp:hover{background:var(--ppd);transform:translateY(-1px)}
+.bo{background:white;color:var(--pp);border:2px solid var(--pp)}
+.bo:hover{background:var(--ppl)}
+.bg{background:var(--pg);color:white}
+.bg:hover{background:#b8880f}
+.bsm{display:inline-block;width:auto;padding:8px 18px;font-size:13px;margin:0}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.ig{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;padding:4px}
+.io{font-size:20px;cursor:pointer;border-radius:7px;padding:3px;border:2px solid transparent;text-align:center;transition:all 0.15s;line-height:1}
+.io:hover{border-color:var(--pp);background:var(--ppl)}
+.io.sel{border-color:var(--pp);background:var(--ppl)}
+.io.taken{opacity:0.3;cursor:not-allowed;filter:grayscale(1)}
+.icon-picker-scroll{max-height:260px;overflow-y:auto;padding:2px}
+.inp{width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--br);font-size:15px;color:var(--td);outline:none;background:white;transition:border-color 0.15s}
+.inp:focus{border-color:var(--pp)}
+.inpl{font-size:13px;font-weight:600;color:var(--tm);margin-bottom:6px;display:block}
+.ing{margin-bottom:16px}
+.pbw{height:6px;background:var(--br);border-radius:3px;margin:16px 0}
+.pbf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pp),var(--pg));transition:width 0.5s}
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.sc{background:var(--ppl);border-radius:10px;padding:14px;text-align:center}
+.sn{font-size:28px;font-weight:800;color:var(--pp)}
+.sl{font-size:12px;color:var(--tm);font-weight:600;margin-top:2px}
+.vrow{display:flex;align-items:center;margin-bottom:10px;gap:10px}
+.vl{font-size:13px;font-weight:600;color:var(--tm);min-width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vbw{flex:1;height:28px;background:var(--pb);border-radius:6px;overflow:hidden;border:1px solid var(--br)}
+.vba{height:100%;background:var(--pp);display:flex;align-items:center;padding-left:8px;color:white;font-size:12px;font-weight:600;transition:width 0.5s;min-width:0}
+.vc{font-size:13px;font-weight:700;color:var(--td);min-width:28px;text-align:right}
+.plist{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pchip{display:flex;align-items:center;gap:6px;background:var(--ppl);border-radius:20px;padding:5px 10px;font-size:13px;color:var(--td);border:1px solid var(--br)}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.cbtn{background:white;border:2px solid var(--br);border-radius:14px;padding:20px 16px;cursor:pointer;transition:all 0.2s;font-size:15px;font-weight:600;color:var(--td);text-align:center;line-height:1.3}
+.cbtn:hover{border-color:var(--pp);background:var(--ppl);color:var(--pp);transform:translateY(-2px);box-shadow:var(--sh)}
+.cbtn.sela{border-color:var(--pp);background:var(--pp);color:white}
+.cbtn.selb{border-color:var(--pt);background:var(--pt);color:white}
+.cbtn.locked{cursor:default}
+.cbtn:hover.locked{transform:none;box-shadow:none}
+.qnum{font-size:12px;font-weight:700;color:var(--pp);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.qtxt{font-size:22px;font-weight:800;color:var(--td);line-height:1.2;margin-bottom:4px}
+.qtxt span{color:var(--pg)}
+.wanim{display:flex;gap:6px;justify-content:center;margin:20px 0}
+.wdot{width:10px;height:10px;border-radius:50%;background:var(--pp);animation:bnc 1.2s ease-in-out infinite}
+.wdot:nth-child(2){animation-delay:0.2s}
+.wdot:nth-child(3){animation-delay:0.4s}
+@keyframes bnc{0%,80%,100%{transform:scale(0.7);opacity:0.5}40%{transform:scale(1.1);opacity:1}}
+.tabrow{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tabbtn{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--br);background:white;color:var(--tm);transition:all 0.15s}
+.tabbtn.active{background:var(--pp);color:white;border-color:var(--pp)}
+.ach{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.achip{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600}
+.chipa{background:#ede8f7;color:var(--pp)}
+.chipb{background:#e0f2ef;color:var(--pt)}
+.gcbox{background:var(--pp);color:white;border-radius:12px;padding:16px;text-align:center;margin-bottom:16px}
+.gc{font-size:36px;font-weight:900;letter-spacing:6px}
+.gcl{font-size:12px;opacity:0.75;margin-top:4px}
+.rsspec{border-radius:14px;padding:18px;margin-bottom:14px;text-align:center}
+.rssico{font-size:36px;margin-bottom:6px}
+.rssl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.rssn{font-size:20px;font-weight:800;color:var(--td)}
+.rssp{font-size:14px;color:var(--tm)}
+.stitle{font-size:14px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.hidden{display:none}
+.qmgr-row{display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid var(--br)}
+.qmgr-row:last-child{border-bottom:none}
+.qmgr-num{font-size:13px;font-weight:700;color:var(--pp);min-width:28px;padding-top:2px}
+.qmgr-opts{font-size:13px;color:var(--tm);flex:1}
+.qmgr-btns{display:flex;gap:4px;flex-shrink:0}
+.qbtn{padding:4px 8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--br);background:white;color:var(--tm);transition:all 0.1s}
+.qbtn:hover{background:var(--ppl);color:var(--pp);border-color:var(--pp)}
+.qbtn.del:hover{background:#fee2e2;color:#dc2626;border-color:#dc2626}
+.qedit{font-size:13px;padding:6px 8px;border-radius:6px;border:1.5px solid var(--pp);outline:none;background:white;color:var(--td);width:100%}
+.celeb-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;border-radius:16px;overflow:hidden}
+.celeb-scene{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px}
+.celeb-char{font-size:72px;line-height:1;animation:charBounce 0.5s cubic-bezier(0.175,0.885,0.32,1.275)}
+@keyframes charBounce{0%{transform:scale(0) rotate(-20deg);opacity:0}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.celeb-msg{font-size:20px;font-weight:800;color:white;margin-top:10px;text-align:center;animation:slideUp 0.35s ease 0.15s both;max-width:320px;line-height:1.3}
+.celeb-sub{font-size:13px;color:rgba(255,255,255,0.72);margin-top:6px;text-align:center;animation:slideUp 0.35s ease 0.25s both;max-width:300px;line-height:1.4}
+.celeb-btn{margin-top:20px;padding:12px 36px;background:var(--pg);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;animation:slideUp 0.35s ease 0.35s both}
+.celeb-btn:hover{background:#b8880f;transform:scale(1.03)}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.confetti-piece{position:absolute;width:9px;height:9px;border-radius:2px;animation:fall linear both;pointer-events:none}
+@keyframes fall{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(260px) rotate(900deg);opacity:0}}
+.celeb-extra{font-size:32px;position:absolute;animation:floatAway ease both;pointer-events:none}
+@keyframes floatAway{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0.4)}}
+#loading-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#f4f0fb;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px}
+.loading-logo{font-size:48px}
+.loading-text{font-size:16px;color:var(--tm);font-weight:600}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="loading-logo">🏛️</div>
+  <div class="loading-text">Loading game...</div>
+</div>
+
+<div class="page" id="app" style="display:none">
+<div class="header">
+  <div class="header-left">
+    <div class="plogo">P</div>
+    <div><div class="htitle">Pearson</div><div class="hsub">BPM/PFS Finance</div></div>
+  </div>
+  <div class="hdots">
+    <div class="dot" style="background:#e8701a"></div>
+    <div class="dot" style="background:#d4a017"></div>
+    <div class="dot" style="background:#007c6e"></div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Team Icebreaker Game</div>
+  <div class="hero-title">This or <span>That</span></div>
+  <div class="hero-sub">Pearson BPM/PFS Finance Edition</div>
+  <div class="cbars">
+    <div class="cbar" style="background:#9e7bc9"></div>
+    <div class="cbar" style="background:#7b5ea7"></div>
+    <div class="cbar" style="background:#007c6e"></div>
+    <div class="cbar" style="background:#5a4890"></div>
+    <div class="cbar" style="background:#d4a017"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="screen-landing">
+    <div class="card cc">
+      <div class="ci">🏛️</div>
+      <div class="ct">How are you joining today?</div>
+      <div class="cs">The host sets up and controls the game. Players join and vote.</div>
+      <button class="btn bp" onclick="startHost()">🎙️ I'm the host</button>
+      <button class="btn bo" onclick="startPlayer()">👤 I'm a player</button>
+    </div>
+  </div>
+
+  <div id="screen-host-setup" class="hidden">
+    <div class="card">
+      <div class="gcbox">
+        <div class="gcl">Game PIN — share with players</div>
+        <div class="gc" id="game-code-display">----</div>
+        <div class="gcl" style="margin-top:6px">Players join at this same URL on any device</div>
+      </div>
+      <div class="sr">
+        <div class="sc"><div class="sn" id="host-player-count">0</div><div class="sl">Players Joined</div></div>
+        <div class="sc"><div class="sn" id="host-q-count">20</div><div class="sl">Questions Ready</div></div>
+      </div>
+      <div class="stitle">Players in lobby</div>
+      <div class="plist" id="lobby-players"><div style="font-size:13px;color:var(--tl)">Waiting for players...</div></div>
+      <br>
+      <button class="btn bp" onclick="hostStartGame()">🚀 Start Game</button>
+      <button class="btn" style="background:#f0ebff;color:var(--pp);border:1.5px solid var(--pp)" onclick="showQManager()">⚙️ Edit Questions</button>
+      <button class="btn bo" onclick="goHome()">← Back</button>
+    </div>
+  </div>
+
+  <div id="screen-qmanager" class="hidden">
+    <div class="card">
+      <div class="ct" style="margin-bottom:4px">Edit Questions</div>
+      <div class="cs" style="margin-bottom:16px">Reorder, edit inline, or add/delete questions.</div>
+      <div id="qmgr-list"></div>
+      <button class="btn bp" style="margin-top:16px" onclick="addQuestion()">+ Add Question</button>
+      <button class="btn bo" onclick="showScreen('screen-host-setup');renderQCount()">← Back to Lobby</button>
+    </div>
+  </div>
+
+  <div id="screen-host-game" class="hidden">
+    <div class="card" style="position:relative" id="host-game-card">
+      <div class="sr">
+        <div class="sc"><div class="sn" id="hg-player-count">0</div><div class="sl">Players</div></div>
+        <div class="sc"><div class="sn" id="hg-voted-count">0</div><div class="sl">Voted</div></div>
+      </div>
+      <div class="qnum" id="hg-q-number">Question 1 of 20</div>
+      <div class="pbw"><div class="pbf" id="hg-progress" style="width:5%"></div></div>
+      <div class="qtxt" id="hg-q-text">Loading...</div>
+      <div class="cg" style="margin-top:16px">
+        <div style="background:var(--ppl);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:12px;font-weight:700;color:var(--pp);margin-bottom:6px">THIS</div>
+          <div style="font-size:14px;font-weight:600;color:var(--td)" id="hg-opt-a">—</div>
+        </div>
+        <div style="background:#e0f2ef;border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:12px;font-weight:700;color:var(--pt);margin-bottom:6px">THAT</div>
+          <div style="font-size:14px;font-weight:600;color:var(--td)" id="hg-opt-b">—</div>
+        </div>
+      </div>
+      <div style="margin-top:18px"><div class="stitle">Live Votes</div><div id="hg-vote-bars"></div></div>
+      <div style="margin-top:14px"><div class="stitle">Who picked what</div><div id="hg-who-picked"></div></div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn bp bsm" onclick="hostNextQuestion()" id="btn-next-q">Next Question →</button>
+        <button class="btn bg bsm" onclick="hostEndGame()">End Game &amp; Results</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-player-join" class="hidden">
+    <div class="card">
+      <div class="ci" style="text-align:center">👋</div>
+      <div class="ct" style="text-align:center">Join the game</div>
+      <div class="ing"><label class="inpl">Your name</label><input class="inp" type="text" id="player-name-input" placeholder="Enter your name" maxlength="20"></div>
+      <div class="ing"><label class="inpl">Game PIN (from host)</label><input class="inp" type="text" id="player-pin-input" placeholder="4-digit PIN" maxlength="4" style="letter-spacing:4px;font-size:20px;font-weight:700" oninput="refreshIconTaken()"></div>
+      <div class="ing"><label class="inpl">Pick your icon</label><div class="icon-picker-scroll"><div id="icon-picker-wrap"></div></div></div>
+      <button class="btn bp" onclick="joinGame()">Join Game 🎮</button>
+      <button class="btn bo" onclick="goHome()">← Back</button>
+    </div>
+  </div>
+
+  <div id="screen-player-lobby" class="hidden">
+    <div class="card cc">
+      <div id="player-icon-display" style="font-size:56px;margin-bottom:8px"></div>
+      <div class="ct" id="player-name-display">Player</div>
+      <div class="cs">You're in the lobby! Waiting for the host to start.</div>
+      <div class="wanim"><div class="wdot"></div><div class="wdot"></div><div class="wdot"></div></div>
+      <div style="font-size:13px;color:var(--tl)" id="player-lobby-count">0 players joined</div>
+    </div>
+  </div>
+
+  <div id="screen-player-vote" class="hidden">
+    <div class="card" id="player-vote-card">
+      <div class="qnum" id="pv-q-number">Question 1 of 20</div>
+      <div class="pbw"><div class="pbf" id="pv-progress" style="width:5%"></div></div>
+      <div class="qtxt">This or <span>That</span></div>
+      <div class="cg" style="margin-top:20px">
+        <button class="cbtn" id="pv-btn-a" onclick="playerVote('a')"></button>
+        <button class="cbtn" id="pv-btn-b" onclick="playerVote('b')"></button>
+      </div>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--tl)" id="pv-status">Pick your answer above</div>
+    </div>
+    <div class="card cc hidden" id="pv-voted-card">
+      <div style="font-size:36px;margin-bottom:8px">✅</div>
+      <div class="ct">Answer locked in!</div>
+      <div class="cs">Waiting for host to advance...</div>
+      <div class="wanim"><div class="wdot"></div><div class="wdot"></div><div class="wdot"></div></div>
+    </div>
+  </div>
+
+  <div id="screen-results" class="hidden">
+    <div class="card">
+      <div class="ct" style="text-align:center;margin-bottom:6px">🎉 Game Over!</div>
+      <div class="cs" style="text-align:center;margin-bottom:20px">Here are your results</div>
+      <div class="tabrow">
+        <button class="tabbtn active" onclick="showResultsTab('specials')">⭐ Special Awards</button>
+        <button class="tabbtn" onclick="showResultsTab('breakdown')">📊 Question Breakdown</button>
+      </div>
+      <div id="results-tab-specials"><div id="specials-content"></div></div>
+      <div id="results-tab-breakdown" class="hidden"><div id="breakdown-content"></div></div>
+      <button class="btn bo" style="margin-top:16px" onclick="shareResults()">📤 Share Results</button>
+      <button class="btn bp" style="margin-top:8px" onclick="goHome()">Play Again</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+// FIREBASE CONFIG
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBG81ywRXDF0YRru15W1fIR3kTneHqxkno",
+  authDomain: "pearson-this-or-that-325c5.firebaseapp.com",
+  databaseURL: "https://pearson-this-or-that-325c5-default-rtdb.firebaseio.com",
+  projectId: "pearson-this-or-that-325c5",
+  storageBucket: "pearson-this-or-that-325c5.firebasestorage.app",
+  messagingSenderId: "939204854829",
+  appId: "1:939204854829:web:5e7fd70a782e5eab8564a4"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+console.log("Firebase ready, db URL:", db.app.options.databaseURL);
+
+// Test write to confirm connectivity
+db.ref(".info/connected").on("value", snap => {
+  console.log("Firebase connected:", snap.val());
+});
+
+// Hide loading screen once Firebase is ready
+document.getElementById('loading-screen').style.display = 'none';
+document.getElementById('app').style.display = 'flex';
+
+// ============================================================
+// ICON CATEGORIES
+// ============================================================
+const ICON_CATEGORIES = {
+  'People': ['🧑‍💼','👩‍💼','🧔','👱','🧓','👴','👩‍🔬','🧑‍🏫','🕵️','🧑‍🎤','🤵','👸','🤴','🧑‍🚀','🦸','🦹'],
+  'Pets & Zoo Animals': ['🐶','🐱','🐰','🐹','🐭','🐸','🦊','🐻','🐼','🦁','🐯','🐨','🦄','🐧','🦋','🦜','🐙','🦒','🦓','🐘','🦛','🦏','🐆','🦍'],
+  'Fake Video Game Characters': ['🕹️','👾','🎮','🧙','⚔️','🛡️','🏹','🔮','💎','🗡️','🧝','🧟','🧛','🧜','🧞','🤖','👽','🦾','🪄','💫'],
+  'Food': ['🍕','🍔','🌮','🌯','🥗','🍣','🍜','🍩','🧁','🍦','🥐','🍎','🍓','🧇','🥞','🍟','☕','🧋','🍿','🥨'],
+  'Corporate': ['💼','📊','📈','🖥️','📎','📌','🗂️','🗓️','⌨️','📱','💡','🔐','📧','📝','📋','🏢','🎯','🏆','🖨️','🔏'],
+  'Higher Ed': ['📚','🎓','🏫','✏️','📐','🔬','🧪','🧮','📖','🔭','🗺️','🌍','🎨','🎼','🏛️','📜','🎒','💻','📡','🔩'],
+  'Sports': ['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓','🏸','⛳','🎿','🏂','🤸','🧗','🚴','🏊','🤽','🎣','🥊'],
+  'Pop Culture': ['🎬','🎤','🎸','🎹','🎲','🎭','🎪','🧩','🃏','📺','📻','🎧','🎻','🥁','🪗','🎷','🎺','🎙️','🎡','🎢']
+};
+
+// ============================================================
+// CELEBRATIONS (10, with 5-question cooldown)
+// ============================================================
+const CELEBRATIONS = [
+  {char:'🐸',msg:"Ribbit! That's a wrap on this question!",sub:'The frog has spoken. Nobody questions the frog.',extras:['🪷','💧','🌿'],bg:'rgba(0,80,40,0.93)'},
+  {char:'🧑‍💼',msg:'Synergizing your answers into the cloud!',sub:'Per my last email, everyone did great. Circle back after the next question.',extras:['📊','💼','📧'],bg:'rgba(20,20,80,0.93)'},
+  {char:'🦆',msg:'QUACK. Question complete. QUACK.',sub:'The duck audit team has reviewed your answers and found them satisfactory.',extras:['🌊','🪶','💦'],bg:'rgba(0,60,100,0.93)'},
+  {char:'🧙',msg:'Your answers have been cast into the void!',sub:'The ancient scrolls have recorded your choices. There is no going back now.',extras:['✨','🔮','⭐'],bg:'rgba(60,0,100,0.93)'},
+  {char:'🦖',msg:'RAWR! The dinosaur approves!',sub:'65 million years of evolution led to this exact moment. Worth it.',extras:['🌿','🦕','🌋'],bg:'rgba(40,60,0,0.93)'},
+  {char:'🤖',msg:'PROCESSING... PROCESSING... GREAT ANSWERS.',sub:'My circuits detected a 94.7% fun coefficient. Rounding up to excellent.',extras:['⚡','🔧','💾'],bg:'rgba(10,30,60,0.93)'},
+  {char:'🧀',msg:"That's a gouda round!",sub:'The cheese has been evaluated. The cheese does not lie. Next question incoming.',extras:['🍷','🥖','🫕'],bg:'rgba(80,40,0,0.93)'},
+  {char:'👻',msg:'BOO-tiful answers, everyone!',sub:'The ghost has haunted your choices and found them... acceptable. Mostly.',extras:['🕯️','🕸️','🦇'],bg:'rgba(30,0,60,0.93)'},
+  {char:'🦩',msg:'Flamingoal achieved!',sub:'Standing on one leg while answering is optional but encouraged for the next round.',extras:['🌸','🌴','💅'],bg:'rgba(80,0,50,0.93)'},
+  {char:'🥸',msg:'Nobody suspected a thing.',sub:'Your answers have been filed under "highly suspicious but ultimately fine." Moving on.',extras:['🕵️','🔍','📋'],bg:'rgba(50,30,0,0.93)'}
+];
+const CONFETTI_COLORS = ['#3d0099','#d4a017','#007c6e','#e8701a','#7b2fbe','#ff6b9d','#00b4d8','#f72585'];
+
+// ============================================================
+// DEFAULT QUESTIONS
+// ============================================================
+const DEFAULT_QUESTIONS = [
+  {a:"6:30AM Call",b:"9:30PM Call"},
+  {a:"Tea",b:"Coffee"},
+  {a:"Prefer to work from home",b:"Prefer to work in office"},
+  {a:"Rather give the presentation about something I know well",b:"Rather build the deck about something I know well"},
+  {a:"Single screen savant",b:"No way, I need my monitors"},
+  {a:"0 unread inbox",b:"4,287 unread messages"},
+  {a:"Teams",b:"Outlook"},
+  {a:"OKRs",b:"KPIs"},
+  {a:"Project work",b:"Fire drill"},
+  {a:"Remembers everyone's birthday",b:"Barely remember my own"},
+  {a:"Physical books",b:"What is this, 2008? eText only!"},
+  {a:"Claude",b:"Copilot"},
+  {a:"Math",b:"Science"},
+  {a:"Office temp 66°F / 19°C",b:"Office temp 75°F / 24°C"},
+  {a:"Meetings to collaborate",b:"Focused individual work time"},
+  {a:"Books",b:"Movies"},
+  {a:"Relaxing vacation",b:"Adventurous vacation"},
+  {a:"Work snack — something sweet",b:"Work snack — something salty"},
+  {a:"Music/podcasts while I work",b:"I prefer to be alone with my thoughts"},
+  {a:"Teacher's pet",b:"Please don't call on me"}
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let QUESTIONS = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+let state = {
+  mode:null, gameCode:null, currentQ:0, gamePhase:'lobby',
+  myId:null, myName:null, myIcon:null, selectedIcon:null, hasVoted:false
+};
+let celebHistory = [];
+let editingQIdx = null;
+let gameRef = null;
+let unsubscribe = null;
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function genCode(){ return Math.floor(1000+Math.random()*9000).toString() }
+function genId(){ return Math.random().toString(36).substr(2,9) }
+
+function showScreen(id){
+  ['screen-landing','screen-host-setup','screen-qmanager','screen-host-game',
+   'screen-player-join','screen-player-lobby','screen-player-vote','screen-results']
+  .forEach(s => document.getElementById(s).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function goHome(){
+  if(unsubscribe){ unsubscribe(); unsubscribe=null; }
+  // Clean up player from Firebase if leaving mid-game
+  if(state.myId && state.gameCode){
+    db.ref(`games/${state.gameCode}/players/${state.myId}`).remove();
+  }
+  state = {mode:null,gameCode:null,currentQ:0,gamePhase:'lobby',myId:null,myName:null,myIcon:null,selectedIcon:null,hasVoted:false};
+  QUESTIONS = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+  celebHistory = [];
+  showScreen('screen-landing');
+}
+
+function renderQCount(){
+  const el = document.getElementById('host-q-count');
+  if(el) el.textContent = QUESTIONS.length;
+}
+
+// ============================================================
+// HOST FLOW
+// ============================================================
+function startHost(){
+  state.mode = 'host';
+  state.gameCode = genCode();
+  document.getElementById('game-code-display').textContent = state.gameCode;
+
+  // Write initial game state to Firebase
+  gameRef = db.ref(`games/${state.gameCode}`);
+  gameRef.set({
+    phase: 'lobby',
+    currentQ: 0,
+    questions: QUESTIONS,
+    createdAt: Date.now()
+  });
+
+  showScreen('screen-host-setup');
+  renderQCount();
+
+  // Listen for players joining
+  unsubscribe = gameRef.on('value', snap => {
+    const gs = snap.val();
+    if(!gs) return;
+    const players = Object.values(gs.players || {});
+    document.getElementById('host-player-count').textContent = players.length;
+    const ld = document.getElementById('lobby-players');
+    ld.innerHTML = players.length === 0
+      ? '<div style="font-size:13px;color:var(--tl)">Waiting for players...</div>'
+      : players.map(p => `<div class="pchip"><span style="font-size:16px">${p.icon}</span><span>${p.name}</span></div>`).join('');
+    if(gs.phase === 'question' && state.gamePhase === 'lobby'){
+      state.gamePhase = 'question';
+      showScreen('screen-host-game');
+    }
+    if(gs.phase === 'question') renderHostGame(gs);
+    if(gs.phase === 'results') renderResults(gs);
+  });
+}
+
+function hostStartGame(){
+  state.gamePhase = 'question';
+  state.currentQ = 0;
+  celebHistory = [];
+  gameRef.update({ phase:'question', currentQ:0, questions:QUESTIONS });
+  showScreen('screen-host-game');
+}
+
+function renderHostGame(gs){
+  const qs = gs.questions || QUESTIONS;
+  const q = qs[gs.currentQ];
+  if(!q) return;
+  const players = Object.values(gs.players || {});
+  const total = players.length;
+  const qKey = 'q' + gs.currentQ;
+  const votedA = players.filter(p => p.votes && p.votes[qKey] === 'a');
+  const votedB = players.filter(p => p.votes && p.votes[qKey] === 'b');
+  document.getElementById('hg-player-count').textContent = total;
+  document.getElementById('hg-voted-count').textContent = votedA.length + votedB.length;
+  document.getElementById('hg-q-number').textContent = `Question ${gs.currentQ+1} of ${qs.length}`;
+  document.getElementById('hg-progress').style.width = ((gs.currentQ+1)/qs.length*100) + '%';
+  document.getElementById('hg-q-text').textContent = `${q.a}  vs  ${q.b}`;
+  document.getElementById('hg-opt-a').textContent = q.a;
+  document.getElementById('hg-opt-b').textContent = q.b;
+  const pctA = total > 0 ? Math.round(votedA.length/total*100) : 0;
+  document.getElementById('hg-vote-bars').innerHTML = `
+    <div class="vrow"><div class="vl" style="color:var(--pp)">${q.a}</div><div class="vbw"><div class="vba" style="width:${pctA}%">${pctA>10?pctA+'%':''}</div></div><div class="vc">${votedA.length}</div></div>
+    <div class="vrow"><div class="vl" style="color:var(--pt)">${q.b}</div><div class="vbw"><div class="vba" style="width:${100-pctA}%;background:var(--pt)">${(100-pctA)>10?(100-pctA)+'%':''}</div></div><div class="vc">${votedB.length}</div></div>`;
+  const mkChips = (arr,cls) => arr.length
+    ? arr.map(p=>`<div class="achip ${cls}"><span style="font-size:14px">${p.icon}</span><span>${p.name}</span></div>`).join('')
+    : '<span style="font-size:12px;color:var(--tl)">No votes yet</span>';
+  document.getElementById('hg-who-picked').innerHTML = `
+    <div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--pp);margin-bottom:4px">THIS: ${q.a}</div><div class="ach">${mkChips(votedA,'chipa')}</div></div>
+    <div><div style="font-size:12px;font-weight:600;color:var(--pt);margin-bottom:4px">THAT: ${q.b}</div><div class="ach">${mkChips(votedB,'chipb')}</div></div>`;
+  document.getElementById('btn-next-q').style.display = gs.currentQ >= (qs.length-1) ? 'none' : 'inline-block';
+}
+
+function pickCelebration(){
+  const cooldown = 5;
+  const eligible = CELEBRATIONS.map((_,i)=>i).filter(i=>{
+    const last = celebHistory.lastIndexOf(i);
+    return last === -1 || (celebHistory.length-1-last) >= cooldown;
+  });
+  const pool = eligible.length > 0 ? eligible : CELEBRATIONS.map((_,i)=>i);
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+function showCelebration(onDone){
+  const card = document.getElementById('host-game-card');
+  const idx = pickCelebration();
+  celebHistory.push(idx);
+  const cel = CELEBRATIONS[idx];
+  const overlay = document.createElement('div');
+  overlay.className = 'celeb-overlay';
+  overlay.style.background = cel.bg;
+  const confettiHtml = Array.from({length:24},(_,i)=>{
+    const sz=6+Math.random()*8, sh=Math.random()>0.5?'50%':'2px';
+    return `<div class="confetti-piece" style="left:${Math.random()*100}%;top:${-10+Math.random()*30}%;width:${sz}px;height:${sz}px;border-radius:${sh};background:${CONFETTI_COLORS[i%CONFETTI_COLORS.length]};animation-duration:${0.9+Math.random()*0.9}s;animation-delay:${Math.random()*0.4}s"></div>`;
+  }).join('');
+  const extrasHtml = (cel.extras||[]).map((e,i)=>`<div class="celeb-extra" style="font-size:28px;left:${15+i*30}%;bottom:60px;animation-duration:${1.2+i*0.3}s;animation-delay:${0.4+i*0.15}s">${e}</div>`).join('');
+  overlay.innerHTML = `${confettiHtml}${extrasHtml}
+    <div class="celeb-scene">
+      <div class="celeb-char">${cel.char}</div>
+      <div class="celeb-msg">${cel.msg}</div>
+      <div class="celeb-sub">${cel.sub}</div>
+      <button class="celeb-btn" onclick="this.closest('.celeb-overlay').remove();if(window._celebDone)window._celebDone()">Next Question →</button>
+    </div>`;
+  card.appendChild(overlay);
+  window._celebDone = onDone;
+}
+
+function hostNextQuestion(){
+  showCelebration(()=>{
+    const newQ = state.currentQ + 1;
+    state.currentQ = newQ;
+    gameRef.update({ currentQ: newQ });
+  });
+}
+
+function hostEndGame(){
+  gameRef.update({ phase:'results' });
+}
+
+// ============================================================
+// PLAYER FLOW
+// ============================================================
+function startPlayer(){
+  buildIconPicker([]);
+  showScreen('screen-player-join');
+}
+
+function refreshIconTaken(){
+  const pin = document.getElementById('player-pin-input').value.trim();
+  if(pin.length === 4){
+    db.ref(`games/${pin}/players`).once('value', snap=>{
+      const players = snap.val() || {};
+      const used = Object.values(players).map(p=>p.icon);
+      buildIconPicker(used);
+    });
+  }
+}
+
+function buildIconPicker(used){
+  let html = '';
+  Object.values(ICON_CATEGORIES).forEach(icons => {
+    html += '<div class="ig">';
+    icons.forEach(icon => {
+      const taken = used.includes(icon);
+      const sel = state.selectedIcon === icon;
+      html += `<div class="io${sel?' sel':''}${taken?' taken':''}" onclick="${taken?'':'selectIcon(\''+icon+'\')'}" title="${taken?'Taken':icon}">${icon}</div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('icon-picker-wrap').innerHTML = html;
+}
+
+function selectIcon(icon){
+  const pin = document.getElementById('player-pin-input').value.trim();
+  if(pin.length === 4){
+    db.ref(`games/${pin}/players`).once('value', snap=>{
+      const players = snap.val() || {};
+      const used = Object.values(players).map(p=>p.icon);
+      if(used.includes(icon)){ alert('That icon is already taken! Please pick another.'); buildIconPicker(used); return; }
+      state.selectedIcon = icon;
+      buildIconPicker(used);
+    });
+  } else {
+    state.selectedIcon = icon;
+    buildIconPicker([]);
+  }
+}
+
+function joinGame(){
+  const name = document.getElementById('player-name-input').value.trim();
+  const pin = document.getElementById('player-pin-input').value.trim();
+  const icon = state.selectedIcon;
+  if(!name){ alert('Please enter your name!'); return; }
+  if(!pin || pin.length !== 4){ alert('Please enter a valid 4-digit PIN!'); return; }
+  if(!icon){ alert('Please pick an icon!'); return; }
+
+  const gameCheckRef = db.ref(`games/${pin}`);
+  gameCheckRef.once('value', snap => {
+    const gs = snap.val();
+    if(!gs){ alert('Game not found! Check the PIN with your host.'); return; }
+    const players = gs.players || {};
+    const used = Object.values(players).map(p=>p.icon);
+    if(used.includes(icon)){ alert('That icon was just taken! Please pick another.'); buildIconPicker(used); return; }
+
+    state.myId = genId();
+    state.myName = name;
+    state.myIcon = icon;
+    state.gameCode = pin;
+    gameRef = db.ref(`games/${pin}`);
+
+    // Add player to Firebase
+    db.ref(`games/${pin}/players/${state.myId}`).set({ id:state.myId, name, icon, votes:{} });
+
+    document.getElementById('player-icon-display').textContent = icon;
+    document.getElementById('player-name-display').textContent = name;
+    showScreen('screen-player-lobby');
+
+    // Listen for game state changes
+    unsubscribe = gameRef.on('value', snap => {
+      const gs2 = snap.val();
+      if(!gs2) return;
+      const pc = Object.keys(gs2.players || {}).length;
+      const el = document.getElementById('player-lobby-count');
+      if(el) el.textContent = pc + ' player' + (pc!==1?'s':'') + ' joined';
+      const cur = document.querySelector('[id^="screen-"]:not(.hidden)')?.id;
+      if(gs2.phase === 'question'){
+        if(cur === 'screen-player-lobby'){
+          state.currentQ = gs2.currentQ;
+          showScreen('screen-player-vote');
+          renderPlayerVote(gs2);
+        } else if(cur === 'screen-player-vote' && gs2.currentQ !== state.currentQ){
+          state.currentQ = gs2.currentQ;
+          state.hasVoted = false;
+          document.getElementById('pv-voted-card').classList.add('hidden');
+          document.querySelectorAll('.cbtn').forEach(b=>{ b.className='cbtn'; b.disabled=false; });
+          renderPlayerVote(gs2);
+        } else if(cur === 'screen-player-vote'){
+          // Refresh vote state in case re-render needed
+          const myP = gs2.players && gs2.players[state.myId];
+          if(myP && myP.votes && myP.votes['q'+gs2.currentQ]){
+            markVoted(myP.votes['q'+gs2.currentQ]);
+          }
+        }
+      }
+      if(gs2.phase === 'results'){ renderResults(gs2); }
+    });
+  });
+}
+
+function renderPlayerVote(gs){
+  const qs = gs.questions || QUESTIONS;
+  const q = qs[gs.currentQ];
+  document.getElementById('pv-q-number').textContent = `Question ${gs.currentQ+1} of ${qs.length}`;
+  document.getElementById('pv-progress').style.width = ((gs.currentQ+1)/qs.length*100) + '%';
+  document.getElementById('pv-btn-a').textContent = q.a;
+  document.getElementById('pv-btn-b').textContent = q.b;
+  document.getElementById('pv-status').textContent = 'Pick your answer above';
+  const myP = gs.players && gs.players[state.myId];
+  if(myP && myP.votes && myP.votes['q'+gs.currentQ]) markVoted(myP.votes['q'+gs.currentQ]);
+}
+
+function playerVote(choice){
+  if(state.hasVoted) return;
+  state.hasVoted = true;
+  db.ref(`games/${state.gameCode}/players/${state.myId}/votes/q${state.currentQ}`).set(choice);
+  markVoted(choice);
+}
+
+function markVoted(choice){
+  const a = document.getElementById('pv-btn-a');
+  const b = document.getElementById('pv-btn-b');
+  a.className = 'cbtn locked' + (choice==='a'?' sela':'');
+  b.className = 'cbtn locked' + (choice==='b'?' selb':'');
+  a.disabled = true; b.disabled = true;
+  document.getElementById('pv-voted-card').classList.remove('hidden');
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function renderResults(gs){
+  showScreen('screen-results');
+  const players = Object.values(gs.players || {});
+  const qs = gs.questions || QUESTIONS;
+  const totalQs = qs.length;
+  const majorities = {};
+  for(let i=0;i<totalQs;i++){
+    let cA=0,cB=0;
+    players.forEach(p=>{ if(p.votes?.['q'+i]==='a') cA++; else if(p.votes?.['q'+i]==='b') cB++; });
+    majorities['q'+i] = cA >= cB ? 'a' : 'b';
+  }
+  const scored = players.map(p=>{
+    let w=0,t=0;
+    for(let i=0;i<totalQs;i++){ const k='q'+i; if(p.votes?.[k]){ t++; if(p.votes[k]===majorities[k]) w++; } }
+    return {...p, majorityPct: t>0 ? Math.round(w/t*100) : 0};
+  }).sort((a,b)=>b.majorityPct-a.majorityPct);
+
+  const most = scored[0], least = scored[scored.length-1];
+  document.getElementById('specials-content').innerHTML = `
+    <div class="rsspec" style="background:linear-gradient(135deg,#ede8f7,#d9cff5);border:2px solid var(--pp)">
+      <div class="rssico">🤝</div><div class="rssl" style="color:var(--pp)">Most In Line with the Group</div>
+      <div style="font-size:32px;margin:8px 0">${most?.icon||'?'}</div>
+      <div class="rssn">${most?.name||'—'}</div>
+      <div class="rssp">Voted with majority on ${most?.majorityPct||0}% of questions</div>
+    </div>
+    <div class="rsspec" style="background:linear-gradient(135deg,#fff3cd,#fffbea);border:2px solid var(--pg)">
+      <div class="rssico">🦄</div><div class="rssl" style="color:var(--pg)">Most Unique Voter</div>
+      <div style="font-size:32px;margin:8px 0">${least?.icon||'?'}</div>
+      <div class="rssn">${least?.name||'—'}</div>
+      <div class="rssp">Voted with minority on ${least?100-least.majorityPct:0}% of questions</div>
+    </div>`;
+
+  let bHtml = '';
+  for(let i=0;i<totalQs;i++){
+    const k='q'+i; const q=qs[i]; let cA=0,cB=0;
+    players.forEach(p=>{ if(p.votes?.[k]==='a') cA++; else if(p.votes?.[k]==='b') cB++; });
+    const tot=cA+cB; const pA=tot>0?Math.round(cA/tot*100):0;
+    bHtml += `<div style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--tm);margin-bottom:4px">Q${i+1}: ${q.a} vs ${q.b}</div>
+      <div class="vrow" style="margin:0"><div class="vl" style="color:var(--pp);font-size:12px">${q.a}</div><div class="vbw" style="height:20px"><div class="vba" style="width:${pA}%;font-size:11px">${pA>15?pA+'%':''}</div></div><div class="vc" style="font-size:12px">${cA}</div></div>
+      <div class="vrow" style="margin:0"><div class="vl" style="color:var(--pt);font-size:12px">${q.b}</div><div class="vbw" style="height:20px"><div class="vba" style="width:${100-pA}%;background:var(--pt);font-size:11px">${(100-pA)>15?(100-pA)+'%':''}</div></div><div class="vc" style="font-size:12px">${cB}</div></div>
+    </div>`;
+  }
+  document.getElementById('breakdown-content').innerHTML = bHtml;
+}
+
+function showResultsTab(tab){
+  ['specials','breakdown'].forEach(t => document.getElementById('results-tab-'+t).classList.add('hidden'));
+  document.getElementById('results-tab-'+tab).classList.remove('hidden');
+  document.querySelectorAll('.tabbtn').forEach((btn,i) => btn.classList.toggle('active', ['specials','breakdown'][i]===tab));
+}
+
+function shareResults(){
+  const code = state.gameCode;
+  if(!code){ alert('No active game.'); return; }
+  db.ref(`games/${code}`).once('value', snap => {
+    const gs = snap.val(); if(!gs){ alert('No results found.'); return; }
+    const players = Object.values(gs.players || {});
+    const qs = gs.questions || QUESTIONS;
+    const maj = {};
+    for(let i=0;i<qs.length;i++){ let a=0,b=0; players.forEach(p=>{ if(p.votes?.['q'+i]==='a') a++; else if(p.votes?.['q'+i]==='b') b++; }); maj['q'+i]=a>=b?'a':'b'; }
+    const sc = players.map(p=>{ let w=0,t=0; for(let i=0;i<qs.length;i++){ const k='q'+i; if(p.votes?.[k]){ t++; if(p.votes[k]===maj[k]) w++; } } return {name:p.name,icon:p.icon,pct:t>0?Math.round(w/t*100):0}; }).sort((a,b)=>b.pct-a.pct);
+    const text = `🎮 This or That — Pearson BPM/PFS Edition!\n\n🤝 Most in sync: ${sc[0]?.icon} ${sc[0]?.name} (${sc[0]?.pct}% with majority)\n🦄 Most unique: ${sc[sc.length-1]?.icon} ${sc[sc.length-1]?.name} (${100-(sc[sc.length-1]?.pct||0)}% minority voter)`;
+    if(navigator.clipboard) navigator.clipboard.writeText(text).then(()=>alert('Results copied!')); else alert(text);
+  });
+}
+
+// ============================================================
+// QUESTION MANAGER
+// ============================================================
+function showQManager(){ showScreen('screen-qmanager'); renderQManager(); }
+function renderQManager(){
+  document.getElementById('qmgr-list').innerHTML = QUESTIONS.map((q,i) => `
+    <div class="qmgr-row">
+      <div class="qmgr-num">Q${i+1}</div>
+      <div class="qmgr-opts">
+        <div style="font-size:13px;color:var(--pp);font-weight:600">${q.a}</div>
+        <div style="font-size:12px;color:var(--tl);margin:2px 0">vs</div>
+        <div style="font-size:13px;color:var(--pt);font-weight:600">${q.b}</div>
+      </div>
+      <div class="qmgr-btns">
+        ${i>0?`<button class="qbtn" onclick="moveQ(${i},-1)">↑</button>`:''}
+        ${i<QUESTIONS.length-1?`<button class="qbtn" onclick="moveQ(${i},1)">↓</button>`:''}
+        <button class="qbtn" onclick="editQ(${i})">✏️</button>
+        <button class="qbtn del" onclick="deleteQ(${i})">🗑️</button>
+      </div>
+    </div>
+    ${editingQIdx===i ? `
+    <div style="padding:10px 0 14px 28px;border-bottom:1px solid var(--br)">
+      <div class="ing"><label class="inpl">Option A (THIS)</label><input class="qedit" id="edit-a-${i}" value="${q.a}"></div>
+      <div class="ing"><label class="inpl">Option B (THAT)</label><input class="qedit" id="edit-b-${i}" value="${q.b}"></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="qbtn" style="background:var(--pp);color:white;border-color:var(--pp)" onclick="saveQ(${i})">Save</button>
+        <button class="qbtn" onclick="editingQIdx=null;renderQManager()">Cancel</button>
+      </div>
+    </div>` : ''}
+  `).join('');
+  renderQCount();
+}
+function editQ(i){ editingQIdx=(editingQIdx===i)?null:i; renderQManager(); }
+function saveQ(i){
+  const a=document.getElementById('edit-a-'+i)?.value.trim();
+  const b=document.getElementById('edit-b-'+i)?.value.trim();
+  if(!a||!b){ alert('Both options required.'); return; }
+  QUESTIONS[i]={a,b}; editingQIdx=null; renderQManager();
+}
+function deleteQ(i){
+  if(QUESTIONS.length<=1){ alert('Need at least one question!'); return; }
+  if(!confirm(`Delete Q${i+1}?`)) return;
+  QUESTIONS.splice(i,1); if(editingQIdx===i) editingQIdx=null; renderQManager();
+}
+function moveQ(i,dir){
+  const j=i+dir; if(j<0||j>=QUESTIONS.length) return;
+  [QUESTIONS[i],QUESTIONS[j]]=[QUESTIONS[j],QUESTIONS[i]]; renderQManager();
+}
+function addQuestion(){
+  QUESTIONS.push({a:'New Option A',b:'New Option B'});
+  editingQIdx=QUESTIONS.length-1; renderQManager();
+}
+
+// Clean up old games (optional housekeeping — remove games older than 12 hours)
+function cleanOldGames(){
+  const cutoff = Date.now() - (12*60*60*1000);
+  db.ref('games').orderByChild('createdAt').endAt(cutoff).once('value', snap=>{
+    snap.forEach(child => child.ref.remove());
+  });
+}
+cleanOldGames();
+
+showScreen('screen-landing');
+</script>
+</body></html>
